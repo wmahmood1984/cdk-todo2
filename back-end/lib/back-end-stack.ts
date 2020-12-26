@@ -205,7 +205,7 @@ const pipeline = new CodePipeline.Pipeline(this, 'GatsbyPipeline', {
 });
 
 ///Adding stages to pipeline
-
+const oauth : any = cdk.SecretValue.secretsManager('GitHubToken2')
 //First Stage Source
 pipeline.addStage({
   stageName: 'Source',
@@ -213,8 +213,8 @@ pipeline.addStage({
     new CodePipelineAction.GitHubSourceAction({
       actionName: 'Checkout',
       owner: 'wmahmood1984',
-      repo: "github-repo-name",
-      oauthToken: cdk.SecretValue.secretsManager('GITHUB_TOKEN'), ///create token on github and save it on aws secret manager
+      repo: "cdk-todo2",
+      oauthToken: oauth, ///create token on github and save it on aws secret manager
       output: sourceOutput,                                       ///Output will save in the sourceOutput Artifact
       branch: "master",                                           ///Branch of your repo
     }),
@@ -239,7 +239,7 @@ pipeline.addStage({
     new CodePipelineAction.S3DeployAction({
       actionName: 's3Build',
       input: S3Output,
-      bucket: myBucket,
+      bucket: websiteBucket,
     }),
   ],
 })
